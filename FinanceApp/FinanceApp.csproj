@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'FinanceApp' " />
+  <ItemGroup>
+    <None Remove="Swashbuckle.AspNetCore.Swagger" />
+    <None Remove="Microsoft.EntityFrameworkCore" />
+    <None Remove="Microsoft.EntityFrameworkCore.Relational" />
+    <None Remove="Swashbuckle.AspNetCore" />
+    <None Remove="Pomelo.EntityFrameworkCore.MySql" />
+    <None Remove="Data\" />
+    <None Remove="Model\" />
+    <None Remove="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Castle.Windsor" Version="5.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.17" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+</Project>
