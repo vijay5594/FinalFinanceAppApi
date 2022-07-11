@@ -12,6 +12,7 @@ namespace FinanceApp.Model
         public string GuarantorName{ get; set; }
         public string Address { get; set; }
         public string MobileNumber { get; set; }
+        public string AdditionalMobileNumber { get; set; }
         public string AadharNumber { get; set; }      
         public string ReferredBy { get; set; }
         public string CreatedBy { get; set; }

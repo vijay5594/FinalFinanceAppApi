@@ -202,7 +202,9 @@ public IActionResult GetAllCustomer([FromQuery] PaginationModel pagination)
                            a.ReferredBy,
                            a.MobileNumber,
                            a.Address,
-                           a.AadharNumber
+                           a.AadharNumber,
+                           a.AdditionalMobileNumber
+                           
 
                        }).AsQueryable();
     if (!string.IsNullOrEmpty(pagination.QuerySearch))

@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{6937C8FF-5992-49B0-9630-7B5E3DA21060}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="FinanceApp/Controllers/PaymentController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="FinanceApp/Controllers/CustomerController.cs">
     <Files>
-      <File FileName="FinanceApp/Controllers/CustomerController.cs" Line="102" Column="131" />
+      <File FileName="FinanceApp/Controllers/CustomerController.cs" Line="206" Column="52" />
       <File FileName="FinanceApp/Controllers/ProductController.cs" />
       <File FileName="FinanceApp/Startup.cs" />
       <File FileName="FinanceApp/Data/UserDbContext.cs" />
@@ -16,7 +16,7 @@
       <File FileName="FinanceApp/Model/PaginationModel.cs" />
       <File FileName="FinanceApp/Model/LoginModel.cs" />
       <File FileName="FinanceApp/Model/FileUploadModel.cs" />
-      <File FileName="FinanceApp/Model/CustomerModel.cs" />
+      <File FileName="FinanceApp/Model/CustomerModel.cs" Line="15" Column="27" />
       <File FileName="FinanceApp/Controllers/FileUploadController.cs" />
     </Files>
     <Pads>
@@ -25,7 +25,7 @@
           <Node name="FinanceApp" expanded="True">
             <Node name="FinanceApp" expanded="True">
               <Node name="Controllers" expanded="True">
-                <Node name="PaymentController.cs" selected="True" />
+                <Node name="CustomerController.cs" selected="True" />
               </Node>
               <Node name="Data" expanded="True" />
               <Node name="Model" expanded="True" />
