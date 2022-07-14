@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceApp.Model
 {
@@ -9,11 +8,11 @@ namespace FinanceApp.Model
         [Key]
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
-        public string GuarantorName{ get; set; }
+        public string GuarantorName { get; set; }
         public string Address { get; set; }
         public string MobileNumber { get; set; }
         public string AdditionalMobileNumber { get; set; }
-        public string AadharNumber { get; set; }      
+        public string AadharNumber { get; set; }
         public string ReferredBy { get; set; }
         public string CreatedBy { get; set; }
         public DateTime DateOfCreated { get; set; }
@@ -22,7 +21,5 @@ namespace FinanceApp.Model
         public bool IsActive { get; set; } = true;
         public int AttachmentId { get; set; }
         public string Status { get; set; }
-
-
     }
 }

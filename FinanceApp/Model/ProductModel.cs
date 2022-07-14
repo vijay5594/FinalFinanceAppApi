@@ -5,7 +5,6 @@ namespace FinanceApp.Model
 {
     public class ProductModel
     {
-
         [Key]
         public int ProductId { get; set; }
         public string ProductName { get; set; }
@@ -21,9 +20,5 @@ namespace FinanceApp.Model
         public int Price { get; set; }
         public DateTime StartDate { get; set; }
         public string IsStatus { get; set; }
-
-
-
-
     }
 }

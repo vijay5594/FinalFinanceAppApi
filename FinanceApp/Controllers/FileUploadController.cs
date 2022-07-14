@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using FinanceApp.Data;
 using FinanceApp.Model;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-
 
 namespace FinanceApp.Controllers
 {
@@ -18,7 +15,6 @@ namespace FinanceApp.Controllers
     [ApiController]
     public class FileuploadController : ControllerBase
     {
-
         public readonly UserDbContext context;
         public FileuploadController(UserDbContext userdbcontext)
         {
@@ -50,13 +46,11 @@ namespace FinanceApp.Controllers
                 }
                 return BadRequest();
             }
-
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
-
         private FileUploadModel SaveFileToDB(string filename, string filepathattachment)
         {
             var objfile = new FileUploadModel()

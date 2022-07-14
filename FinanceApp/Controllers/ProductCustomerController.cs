@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FinanceApp.Data;
 using FinanceApp.Model;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinanceApp.Controllers
 {
@@ -15,7 +13,6 @@ namespace FinanceApp.Controllers
     public class ProductCustomerController : Controller
     {
         private readonly UserDbContext context;
-
         public ProductCustomerController(UserDbContext userdbcontext)
         {
             context = userdbcontext;
@@ -57,11 +54,9 @@ namespace FinanceApp.Controllers
                 var productcustomer = context.ProductCustomerModels.Where(a => a.IsActive == IsActive);
                 return Ok(productcustomer);
             }
-            else
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
+
         [HttpGet("OrderByProduct")]
         public IActionResult GetById(int ProductId)
         {
@@ -73,38 +68,6 @@ namespace FinanceApp.Controllers
             }
             return NotFound();
         }
-
-        [HttpGet("OrderBycustomer")]
-        public IActionResult GetCustomer(int customerId)
-        {
-            bool IsActive = true;
-            var products = context.ProductCustomerModels.Where(a => a.CustomerId == customerId && a.IsActive == IsActive);
-            if (products != null)
-            {
-                return Ok(products);
-            }
-            return NotFound();
-        }
-
-        /*[HttpGet("FliterCustomerDetailsForProduct")]
-        public IActionResult CustomerDetailsForPay(int id)
-        {
-            var data = from c1 in context.ProductCustomerModels
-                       join c in context.CustomerModels on c1.CustomerId equals c.CustomerId
-                       join p in context.ProductModels on c1.ProductId equals p.ProductId
-                       where c1.ProductId == id
-                       select new
-                       {
-                           c.CustomerName,
-                           c1.SlotNo,
-                           c.CustomerId,
-                           p.ProductId,
-                           p.ProductName,
-                           c1.ProductCustomerId
-                       };
-            return Ok(data);
-        }*/
-
 
         [HttpGet("FliterCustomerDetailsForProduct")]
         public IActionResult CustomerDetailsForPay(int id)
@@ -123,9 +86,8 @@ namespace FinanceApp.Controllers
                            ProductTenure = c2.ProductTenure == null ? 0 : c2.ProductTenure,
                            CustomerName = c1.CustomerName == null ? "no value" : c1.CustomerName,
                            SlotNo = c.SlotNo == null ? 0 : c.SlotNo,
-
-
-                       } into g
+                       }
+                       into g
                        select new
                        {
                            name = g.Key.product,
@@ -135,15 +97,9 @@ namespace FinanceApp.Controllers
                            ProductCustomerId = g.Key.ProductCustomerId,
                            SubcriberList = g.Max(q => q == null ? 0 : q.SubscriberList),
                            SlotNo = g.Key.SlotNo
-
-
                        };
-
-
             return Ok(data);
         }
-
-
 
         [HttpGet("FliterProductForCustomer")]
         public IActionResult ForPay(int id)
@@ -163,7 +119,6 @@ namespace FinanceApp.Controllers
                            CustomerName = c1.CustomerName == null ? "no value" : c1.CustomerName,
                            SlotNo = c.SlotNo == null ? 0 : c.SlotNo,
                            Status = c1.Status == null ? "no value" : c1.Status,
-
                        } into g
                        select new
                        {
@@ -174,39 +129,10 @@ namespace FinanceApp.Controllers
                            ProductCustomerId = g.Key.ProductCustomerId,
                            SlotNo = g.Key.SlotNo,
                            Status = g.Key.Status
-                           /*SubcriberList = g.Max(q => q == null ? 0 : q.SubscriberList)*/
-
-
                        };
-
 
             return Ok(data);
         }
-
-
-        /*[HttpGet("FliterProductForCustomer")]
-        public IActionResult ProductDetailsForPay(int id)
-        {
-            var data = from c1 in context.ProductCustomerModels
-                       join c in context.CustomerModels on c1.CustomerId equals c.CustomerId
-                       join p in context.ProductModels on c1.ProductId equals p.ProductId
-                       where c1.CustomerId == id
-                       select new
-                       {
-                           c.CustomerName,
-                           c1.SlotNo,
-                           p.ProductName,
-                           c.CustomerId,
-                           p.ProductId,
-                           c1.ProductCustomerId
-                       };
-            return Ok(data);
-        }
-*/
-
-
-
-
     }
 }
 

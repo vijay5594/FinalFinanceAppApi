@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using FinanceApp.Data;
 using FinanceApp.Model;
 using Microsoft.AspNetCore.Cors;
@@ -18,13 +15,6 @@ namespace FinanceApp.Controllers
         public LoginController(UserDbContext userData)
         {
             dataContext = userData;
-        }
-
-        [HttpGet("GetUserDetails")]
-        public IActionResult GetUserDetails()
-        {
-            var UserDetails = dataContext.LoginModels.AsQueryable();
-            return Ok(UserDetails);
         }
 
         [HttpPost("AddUser")]
@@ -57,23 +47,6 @@ namespace FinanceApp.Controllers
             return BadRequest();
         }
 
-        [HttpPut("UpdateLogin")]
-        public IActionResult UpdateLogin([FromBody] LoginModel obj)
-        {
-            if (obj == null)
-            {
-                return BadRequest();
-            }
-            var user = dataContext.LoginModels.AsNoTracking().FirstOrDefault(x => x.UserId == obj.UserId);
-            if (!dataContext.LoginModels.Any(x => x.UserName == obj.UserName) && user != null)
-            {
-                dataContext.Entry(obj).State = EntityState.Modified;
-                dataContext.SaveChanges();
-                return Ok(obj);
-            }
-            return BadRequest();
-        }
-
         [HttpGet("UserExist")]
         public IActionResult GetUser(string obj)
         {
@@ -94,6 +67,23 @@ namespace FinanceApp.Controllers
             }
         }
 
+        [HttpPut("UpdateLogin")]
+        public IActionResult UpdateLogin([FromBody] LoginModel obj)
+        {
+            if (obj == null)
+            {
+                return BadRequest();
+            }
+            var user = dataContext.LoginModels.AsNoTracking().FirstOrDefault(x => x.UserId == obj.UserId);
+            if (!dataContext.LoginModels.Any(x => x.UserName == obj.UserName) && user != null)
+            {
+                dataContext.Entry(obj).State = EntityState.Modified;
+                dataContext.SaveChanges();
+                return Ok(obj);
+            }
+            return BadRequest();
+        }
+
         [HttpDelete("DeletUser")]
         public IActionResult DeletUser(int id)
         {
@@ -109,6 +99,5 @@ namespace FinanceApp.Controllers
                 return Ok();
             }
         }
-
     }
 }

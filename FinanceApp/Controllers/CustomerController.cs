@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FinanceApp.Data;
 using FinanceApp.Model;
 using Microsoft.AspNetCore.Cors;
@@ -32,11 +31,9 @@ namespace FinanceApp.Controllers
         }
 
         [HttpGet("existMobileNumber")]
-
         public IActionResult GetMobileNumber(string obj)
         {
             var productName = context.CustomerModels.Where(a => a.MobileNumber == obj).FirstOrDefault();
-
             if (productName == null)
             {
                 return Ok(new
@@ -54,7 +51,6 @@ namespace FinanceApp.Controllers
         }
 
         [HttpGet("existAadharNumber")]
-
         public IActionResult GetproductName(string obj)
         {
             var productName = context.CustomerModels.Where(a => a.AadharNumber == obj).FirstOrDefault();
@@ -75,33 +71,52 @@ namespace FinanceApp.Controllers
             }
         }
 
-        [HttpGet("customerId")]
-        public IActionResult CustomerDetails(int id)
+        [HttpGet("CustomerPagination")]
+        public IActionResult GetAllCustomer([FromQuery] PaginationModel pagination)
         {
-            var details = context.CustomerModels.Where(a => a.CustomerId == id).ToList();
-            return Ok(details);
+            var allcustomer = (from a in context.CustomerModels
+                               join p in context.FileAttachment on a.AttachmentId equals p.AttachmentId
+                               orderby a.DateOfCreated descending
+                               select new
+                               {
+                                   p.AttachmentName,
+                                   p.AttachmentId,
+                                   a.CustomerName,
+                                   a.CustomerId,
+                                   a.GuarantorName,
+                                   a.ReferredBy,
+                                   a.MobileNumber,
+                                   a.Address,
+                                   a.AadharNumber,
+                                   a.AdditionalMobileNumber
+                               }).AsQueryable();
+            if (!string.IsNullOrEmpty(pagination.QuerySearch))
+            {
+                allcustomer = allcustomer.Where(a => a.CustomerName.Contains(pagination.QuerySearch));
+            }
+            int count = allcustomer.Count();
+            int CurrentPage = pagination.PageNumber;
+            int PageSize = pagination.PageSize;
+            int TotalCount = count;
+            int TotalPages = (int)Math.Ceiling(count / (double)PageSize);
+            var item = allcustomer.Skip((CurrentPage - 1) * PageSize).Take(pagination.PageSize);
+            var previousPage = CurrentPage > 1 ? "Yes" : "No";
+            var nextPage = CurrentPage < TotalPages ? "Yes" : "No";
+            return Ok(item);
         }
 
         [HttpPut("UpdateCustomer")]
         public IActionResult UpdateCustomerDetails([FromBody] CustomerModel userObj)
         {
-            /* var customer = context.CustomerModels.AsNoTracking().FirstOrDefault(a => a.CustomerId == userObj.CustomerId);
-             if (customer != null)
-             {
-                 context.Entry(userObj).State = EntityState.Modified;
-                 context.SaveChanges();
-                 return Ok(userObj);
-             }
-             return BadRequest();*/
             if (context.CustomerModels.Any(a => a.CustomerId == userObj.CustomerId && a.MobileNumber == userObj.MobileNumber))
             {
                 context.Entry(userObj).State = EntityState.Modified;
                 context.SaveChanges();
                 return Ok(userObj);
             }
-            else if(context.CustomerModels.Any(a => a.CustomerId == userObj.CustomerId && a.MobileNumber != userObj.MobileNumber))
+            else if (context.CustomerModels.Any(a => a.CustomerId == userObj.CustomerId && a.MobileNumber != userObj.MobileNumber))
             {
-                if(context.CustomerModels.Any(a=>a.MobileNumber==userObj.MobileNumber))
+                if (context.CustomerModels.Any(a => a.MobileNumber == userObj.MobileNumber))
                 {
                     return BadRequest(new
                     {
@@ -113,16 +128,13 @@ namespace FinanceApp.Controllers
                     context.Entry(userObj).State = EntityState.Modified;
                     context.SaveChanges();
                     return Ok(userObj);
-
                 }
             }
             return BadRequest(new
             {
                 StatusCode = "400"
             });
-
         }
-
 
         [HttpDelete("DeleteCustomer")]
         public IActionResult DeleteCustomerDetails(int CustomerId)
@@ -133,97 +145,6 @@ namespace FinanceApp.Controllers
             context.SaveChanges();
             return Ok(customer);
         }
-
-        [HttpGet("AllCustomers")]
-        public IActionResult GetAllCustomers()
-        {
-            bool IsActive = true;
-            if (IsActive == true)
-            {
-                var customers = context.CustomerModels.Where(a => a.IsActive == IsActive);
-                return Ok(customers);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-
-    /*    [HttpGet("FliterCustomerDetails")]
-        public IActionResult GetAllProductCustomer()
-        {
-            var allproductcustomer = (from a in context.CustomerModels
-                                      join p in context.FileAttachment on a.AttachmentId equals p.AttachmentId
-                                      select new
-                                      {
-                                          p.AttachmentName,
-                                          p.AttachmentId,
-                                          a.CustomerName,
-                                          a.CustomerId,
-                                          a.GuarantorName,
-                                          a.ReferredBy,
-                                          a.MobileNumber,
-                                          a.AadharNumber,
-                                          a.Address,
-                                          a.Status
-
-
-                                      }).ToList();
-            var produts = allproductcustomer.ToList();
-            return Ok(produts);
-
-        }
-
-        [HttpGet("Page")]
-        public ActionResult<List<CustomerModel>> GetAll(int? page = 10, int? pageSize = 10)
-        {
-            if (!page.HasValue)
-            {
-                return context.CustomerModels.ToList();
-            }
-            return BadRequest();
-        }
     }
-}*/
-[HttpGet("CustomerPagination")]
-public IActionResult GetAllCustomer([FromQuery] PaginationModel pagination)
-{
-
-    var allcustomer = (from a in context.CustomerModels
-                       join p in context.FileAttachment on a.AttachmentId equals p.AttachmentId
-                       select new
-                       {
-                           p.AttachmentName,
-                           p.AttachmentId,
-                           a.CustomerName,
-                           a.CustomerId,
-                           a.GuarantorName,
-                           a.ReferredBy,
-                           a.MobileNumber,
-                           a.Address,
-                           a.AadharNumber,
-                           a.AdditionalMobileNumber
-                           
-
-                       }).AsQueryable();
-    if (!string.IsNullOrEmpty(pagination.QuerySearch))
-    {
-        allcustomer = allcustomer.Where(a => a.CustomerName.Contains(pagination.QuerySearch));
-    }
-    int count = allcustomer.Count();
-    int CurrentPage = pagination.PageNumber;
-    int PageSize = pagination.PageSize;
-    int TotalCount = count;
-    int TotalPages = (int)Math.Ceiling(count / (double)PageSize);
-    var item = allcustomer.Skip((CurrentPage - 1) * PageSize).Take(pagination.PageSize);
-    var previousPage = CurrentPage > 1 ? "Yes" : "No";
-    var nextPage = CurrentPage < TotalPages ? "Yes" : "No";
-
-    return Ok(item);
-}
-    }
-    
-
 }
 

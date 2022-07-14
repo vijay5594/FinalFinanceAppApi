@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using FinanceApp.Data;
 using FinanceApp.Model;
 using Microsoft.AspNetCore.Cors;
@@ -15,10 +12,18 @@ namespace FinanceApp.Controllers
     public class ProductController : ControllerBase
     {
         private readonly UserDbContext context;
-
         public ProductController(UserDbContext userdbcontext)
         {
             context = userdbcontext;
+        }
+
+        [HttpPost("AddNewProduct")]
+        public IActionResult AddProductDetails([FromBody] ProductModel productObj)
+        {
+            productObj.IsStatus = "open";
+            context.ProductModels.Add(productObj);
+            context.SaveChanges();
+            return Ok(productObj);
         }
 
         [HttpGet("ProductId")]
@@ -27,31 +32,6 @@ namespace FinanceApp.Controllers
             var details = context.ProductModels.Where(a => a.ProductId == id).ToList();
             return Ok(details);
         }
-
-
-        [HttpGet("customer")]
-        public IActionResult CustomerDetails(int id)
-        {
-            var details = context.CustomerModels.Where(a => a.CustomerId == id).ToList();
-            return Ok(details);
-        }
-
-        [HttpPost("AddNewProduct")]
-        public IActionResult AddProductDetails([FromBody] ProductModel productObj)
-        {
-            /* if (!context.ProductModels.Any(a => a.ProductName == productObj.ProductName))
-             {*/
-            productObj.IsStatus = "open";
-            context.ProductModels.Add(productObj);
-            context.SaveChanges();
-            return Ok(productObj);
-            /*}
-            else
-            {
-                return BadRequest();
-            }*/
-        }
-
 
         [HttpGet("productNameExist")]
 
@@ -75,92 +55,12 @@ namespace FinanceApp.Controllers
             }
         }
 
-        [HttpPut("UpdateProduct")]
-        public IActionResult UpdateProductDetails([FromBody] ProductModel productObj)
-        {
-
-            if (context.ProductModels.Any(a => a.ProductId == productObj.
-             ProductId && a.ProductName == productObj.ProductName))
-            {
-                context.Entry(productObj).State = EntityState.Modified;
-                context.SaveChanges();
-                return Ok(productObj);
-            }
-            else if (context.ProductModels.Any(a => a.ProductId == productObj.ProductId && a.ProductName != productObj.ProductName))
-            {
-                if (context.ProductModels.Any(a => a.ProductName == productObj.ProductName))
-                {
-                    return BadRequest(new
-                    {
-                        StatusCode = "400"
-                    });
-                }
-                else
-                {
-                    context.Entry(productObj).State = EntityState.Modified;
-                    context.SaveChanges();
-                    return Ok(productObj);
-                }
-
-            }
-            return BadRequest(new
-            {
-                StatusCode = "400"
-            });
-        }
-
-        [HttpDelete("DeleteProduct")]
-        public IActionResult DeleteProductDetails(int ProductId)
-        {
-            var products = context.ProductModels.Where(a => a.ProductId == ProductId).FirstOrDefault();
-            if (products == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                products.IsActive = false;
-                context.SaveChanges();
-                return Ok();
-            }
-        }
-
-        [HttpGet("Allproducts")]
-        public IActionResult GetAllProducts()
-        {
-            bool IsActive = true;
-            var products = context.ProductModels.Where(a => a.IsActive == IsActive);
-            return Ok(products);
-        }
-
-        [HttpGet("FliteredProductDetails")]
-        public IActionResult GetAllProductCustomer()
-        {
-            var allproductcustomer = (from a in context.ProductCustomerModels
-                                      join p in context.ProductModels on a.ProductId equals p.ProductId
-                                      select new
-                                      {
-                                          p.ProductName,
-                                          p.ProductId,
-                                          p.ProductTenure,
-                                          p.Price,
-                                          a.SlotNo
-
-                                      }).ToList();
-            var produts = allproductcustomer.ToList();
-            return Ok(produts);
-
-        }
-
-
         [HttpGet("GetProductDetails")]
         public IActionResult ProductDetails()
         {
-
             var data = from s in context.ProductModels
                        where s.IsStatus == "open"
                        join i in context.ProductCustomerModels on s.ProductId equals i.ProductId into groupClasses
-                       
                        from gc in groupClasses.DefaultIfEmpty()
                        group gc by new
                        {
@@ -187,11 +87,55 @@ namespace FinanceApp.Controllers
                            Slot = g.Max(p => p == null ? 0 : p.SlotNo)
                        };
             return Ok(data);
-
-
         }
 
+        [HttpPut("UpdateProduct")]
+        public IActionResult UpdateProductDetails([FromBody] ProductModel productObj)
+        {
+            if (context.ProductModels.Any(a => a.ProductId == productObj.
+             ProductId && a.ProductName == productObj.ProductName))
+            {
+                context.Entry(productObj).State = EntityState.Modified;
+                context.SaveChanges();
+                return Ok(productObj);
+            }
+            else if (context.ProductModels.Any(a => a.ProductId == productObj.ProductId && a.ProductName != productObj.ProductName))
+            {
+                if (context.ProductModels.Any(a => a.ProductName == productObj.ProductName))
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = "400"
+                    });
+                }
+                else
+                {
+                    context.Entry(productObj).State = EntityState.Modified;
+                    context.SaveChanges();
+                    return Ok(productObj);
+                }
+            }
+            return BadRequest(new
+            {
+                StatusCode = "400"
+            });
+        }
 
+        [HttpDelete("DeleteProduct")]
+        public IActionResult DeleteProductDetails(int ProductId)
+        {
+            var products = context.ProductModels.Where(a => a.ProductId == ProductId).FirstOrDefault();
+            if (products == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                products.IsActive = false;
+                context.SaveChanges();
+                return Ok();
+            }
+        }
     }
 }
 

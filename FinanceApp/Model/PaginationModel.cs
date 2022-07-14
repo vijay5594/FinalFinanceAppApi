@@ -1,5 +1,4 @@
-﻿using System;
-namespace FinanceApp.Model
+﻿namespace FinanceApp.Model
 {
     public class PaginationModel
     {
