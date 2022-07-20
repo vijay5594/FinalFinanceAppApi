@@ -36,14 +36,33 @@ namespace FinanceApp.Controllers
         public IActionResult GetLogin([FromBody] LoginModel data)
         {
             var user = dataContext.LoginModels.Where(x => x.UserName == data.UserName && x.Password == data.Password).FirstOrDefault();
-            if (dataContext.LoginModels.Any(x => x.UserName == data.UserName && x.Password == data.Password && x.Role == "Admin"))
+            if (user != null && user.Role == "Admin")
+            {
+
+                return Ok(user);
+            }
+            if (user != null && user.Role == "operator")
             {
                 return Ok(user);
             }
-            if (dataContext.LoginModels.Any(x => x.UserName == data.UserName && x.Password == data.Password && x.Role == "operator"))
+            return BadRequest();
+        }
+        [HttpGet("GetUser")]
+        public IActionResult GetUser(int data)
+        {
+            var user = dataContext.LoginModels.Where(x => x.UserId == data).SingleOrDefault();
+            if (user != null && user.Role == "Admin")
+            {
+                var AllUser = dataContext.LoginModels.AsQueryable();
+                return Ok(AllUser);
+
+            }
+            if (user != null && user.Role == "operator")
             {
                 return Ok(user);
+
             }
+
             return BadRequest();
         }
 
@@ -67,24 +86,40 @@ namespace FinanceApp.Controllers
             }
         }
 
-        [HttpPut("UpdateLogin")]
-        public IActionResult UpdateLogin([FromBody] LoginModel obj)
+        [HttpPut("UpdateUser")]
+        public IActionResult UpdateUser([FromBody] LoginModel Obj)
         {
-            if (obj == null)
+
+            if (dataContext.LoginModels.Any(a => a.UserId == Obj.
+            UserId && a.UserName == Obj.UserName))
             {
-                return BadRequest();
-            }
-            var user = dataContext.LoginModels.AsNoTracking().FirstOrDefault(x => x.UserId == obj.UserId);
-            if (!dataContext.LoginModels.Any(x => x.UserName == obj.UserName) && user != null)
-            {
-                dataContext.Entry(obj).State = EntityState.Modified;
+                dataContext.Entry(Obj).State = EntityState.Modified;
                 dataContext.SaveChanges();
-                return Ok(obj);
+                return Ok(Obj);
             }
-            return BadRequest();
+            else if (dataContext.LoginModels.Any(a => a.UserId == Obj.UserId && a.UserName != Obj.UserName))
+            {
+                if (dataContext.LoginModels.Any(a => a.UserName == Obj.UserName))
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = "400"
+                    });
+                }
+                else
+                {
+                    dataContext.Entry(Obj).State = EntityState.Modified;
+                    dataContext.SaveChanges();
+                    return Ok(Obj);
+                }
+            }
+            return BadRequest(new
+            {
+                StatusCode = "400"
+            });
         }
 
-        [HttpDelete("DeletUser")]
+        [HttpDelete("DeleteUser")]
         public IActionResult DeletUser(int id)
         {
             var deleteUser = dataContext.LoginModels.Find(id);
@@ -98,6 +133,18 @@ namespace FinanceApp.Controllers
                 dataContext.SaveChanges();
                 return Ok();
             }
+        }
+
+        [HttpGet("CheckUser")]
+        public IActionResult CheckUser(int id)
+        {
+            var checkuser = dataContext.LoginModels.AsNoTracking().FirstOrDefault(x => x.UserId == id);
+            bool isActive = true;
+            if (checkuser != null)
+            {
+                return Ok(isActive);
+            }
+            return Ok(!isActive);
         }
     }
 }
