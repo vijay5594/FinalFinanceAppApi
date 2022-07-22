@@ -47,6 +47,7 @@ namespace FinanceApp.Controllers
             }
             return BadRequest();
         }
+
         [HttpGet("GetUser")]
         public IActionResult GetUser(int data)
         {

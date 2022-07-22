@@ -32,7 +32,7 @@ namespace FinanceApp.Controllers
                     if (context.ProductCustomerModels.Any(a => a.ProductCustomerId == pay.ProductCustomerId && a.ProductCustomerId >= pay.SubscriberList) &&
                context.PaymentModels.Any(a => a.ProductCustomerId == pay.ProductCustomerId))
                     {
-                        context.PaymentModels.Add(pay);
+                       
                         context.PaymentModels.Add(pay);
                         context.SaveChanges();
                         return Ok(pay);

@@ -30,7 +30,6 @@ namespace FinanceApp.Controllers
            !context.ProductCustomerModels.Any(a => a.ProductId == userObj.ProductId && a.SlotNo == userObj.SlotNo))
                 {
                     context.ProductCustomerModels.Add(userObj);
-                    context.ProductCustomerModels.Add(userObj);
                     context.SaveChanges();
                     return Ok(userObj);
                 }
