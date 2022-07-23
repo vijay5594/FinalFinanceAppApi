@@ -71,14 +71,17 @@ namespace FinanceApp.Controllers
                            Type = s.ProductType == null ? "no value" : s.ProductType,
                            Customers = s.NoOfCustomers == null ? 0 : s.NoOfCustomers,
                            Price = s.Price == null ? 0 : s.Price,
+                           DateOfCreated = s.DateOfCreated,
                            ProductDescription = s.ProductDescription == null ? "no value" : s.ProductDescription
                        }
          into g
                        select new
+
                        {
                            productId = g.Key.product,
                            productName = g.Key.Name,
                            ProductTenure = g.Key.Tenure,
+                           DateOfCreated = g.Key.DateOfCreated,
                            ProductType = g.Key.Type,
                            Price = g.Key.Price,
                            ProductDescription = g.Key.ProductDescription,
