@@ -108,6 +108,7 @@ namespace FinanceApp.Controllers
             return Ok(products);
 
         }
+
         [HttpGet("CustomerPayHistory")]
         public IActionResult CustomerDetailsForPay(int id)
         {

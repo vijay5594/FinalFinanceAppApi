@@ -44,32 +44,8 @@ namespace FinanceApp.Controllers
             return BadRequest();
         }
 
-        [HttpGet("AllproductCustomer")]
-        public IActionResult GetAllProductCustomer()
-        {
-            bool IsActive = true;
-            if (IsActive == true)
-            {
-                var productcustomer = context.ProductCustomerModels.Where(a => a.IsActive == IsActive);
-                return Ok(productcustomer);
-            }
-            return NotFound();
-        }
-
-        [HttpGet("OrderByProduct")]
-        public IActionResult GetById(int ProductId)
-        {
-            bool IsActive = true;
-            var products = context.ProductCustomerModels.Where(a => a.ProductId == ProductId && a.IsActive == IsActive);
-            if (products != null)
-            {
-                return Ok(products);
-            }
-            return NotFound();
-        }
-
-        [HttpGet("FliterCustomerDetailsForProduct")]
-        public IActionResult CustomerDetailsForPay(int id)
+        [HttpGet("CustomerDetailsForProduct")]
+        public IActionResult CustomerDetailsForProduct(int id)
         {
             var data = from c1 in context.CustomerModels
                        join c in context.ProductCustomerModels on c1.CustomerId equals c.CustomerId
@@ -100,8 +76,8 @@ namespace FinanceApp.Controllers
             return Ok(data);
         }
 
-        [HttpGet("FliterProductForCustomer")]
-        public IActionResult ForPay(int id)
+        [HttpGet("ProductDetailsForCustomer")]
+        public IActionResult FoProductDetailsForCustomer(int id)
         {
             var data = from c1 in context.CustomerModels
                        join c in context.ProductCustomerModels on c1.CustomerId equals c.CustomerId

@@ -136,7 +136,7 @@ namespace FinanceApp.Controllers
             }
         }
 
-        [HttpGet("CheckUser")]
+        [HttpGet("NonExistingUserLogout")]
         public IActionResult CheckUser(int id)
         {
             var checkuser = dataContext.LoginModels.AsNoTracking().FirstOrDefault(x => x.UserId == id);

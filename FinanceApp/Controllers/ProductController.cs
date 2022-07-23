@@ -26,7 +26,7 @@ namespace FinanceApp.Controllers
             return Ok(productObj);
         }
 
-        [HttpGet("ProductId")]
+        [HttpGet("GetProductName")]
         public IActionResult ProductDetails(int id)
         {
             var details = context.ProductModels.Where(a => a.ProductId == id).ToList();
